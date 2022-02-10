@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import SearchDisplay from "./SearchDisplay"
 import DecksDisplay from "./DecksDisplay"
 import ListOfCards from "./ListOfCards"
+const axios = require("axios")
 
 
 export default function UserArea() {
@@ -14,8 +15,9 @@ export default function UserArea() {
 
         async function getDecksFromApi() {
             try {
-                const response = await fetch("https://safe-fortress-24111.herokuapp.com/decks/1")
+                const response = await fetch("http://localhost:5000/decks")
                 const decksFromApi = await response.json()
+                console.log(decksFromApi)
                 setDecks(decksFromApi.data)
             } catch (error) {
                 throw error
@@ -24,6 +26,25 @@ export default function UserArea() {
         getDecksFromApi()
 
     }, [])
+
+    useEffect(() => {
+        async function getCardsInDeck() {
+            if (currentDeckId) {
+                try {
+                    console.log("deckid", currentDeckId)
+                    const response = await fetch(`http://localhost:5000/decks-cards/1`)
+                    const cardsInDeck = await response.json()
+                    console.log("cards in deck", cardsInDeck)
+                    setCurrentDeck(cardsInDeck)
+                } catch (error) {
+                    throw error
+                }
+            } else {
+                return
+            }
+        }
+        getCardsInDeck()
+    }, [currentDeckId])
 
     return (
         <div>

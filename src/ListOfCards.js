@@ -1,23 +1,32 @@
-import React from "react"
+import { useEffect } from "react"
 
+/**
+ * Parents: UserArea
+ * @param {*} param0 
+ * @returns 
+ */
 export default function ListOfCards({ currentDeck, setCurrentDeck, currentDeckId }) {
-    
-/*     if (currentDeck) {
+
+    let content = "No Cards found"
+
+    useEffect(() => {
+        console.log("deck in listofcards", currentDeck)
+        if (currentDeck.length) {
+            content = currentDeck.map((card, index) => (
+                <p>{card.name}</p>
+            ))
+            console.log("content", content)
+        }
+    }, [])
+
+    if (currentDeck.length) {
         return (
             <div>
-                <h3 className="p-2">Cards</h3>
-                {currentDeck.map((card, index) => (
-                    <h6>{card.name}</h6>
-                ))}
+                {content}
             </div>
         )
-    } */
-
-    return (
-        <div>
-            <h3 className="p-2">Cards</h3>
-            <h6>No cards found</h6>
-        </div>
-    )
+    } else {
+        return "No cards found."
+    }
 
 }

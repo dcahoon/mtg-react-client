@@ -8,7 +8,7 @@ import axios from "axios"
 export default function CardSearchForm({ results, setResults }) {
     
     const [formValue, setFormValue] = useState("")
-    
+
     function findMatches(formValue) {
         axios.get(
             'https://api.magicthegathering.io/v1/cards',
