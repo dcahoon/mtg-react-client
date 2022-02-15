@@ -1,32 +1,34 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
+import { readDeck } from "./utils/api"
 
 /**
  * Parents: UserArea
  * @param {*} param0 
  * @returns 
  */
-export default function ListOfCards({ currentDeck, setCurrentDeck, currentDeckId }) {
+export default function ListOfCards({ currentDeckId }) {
 
-    let content = "No Cards found"
+    const [deck, setDeck] = useState({ cards: [] })
+    const [error, setError] = useState(null)
+    const [cardList, setCardList] = useState([])
 
     useEffect(() => {
-        console.log("deck in listofcards", currentDeck)
-        if (currentDeck.length) {
-            content = currentDeck.map((card, index) => (
-                <p>{card.name}</p>
-            ))
-            console.log("content", content)
-        }
-    }, [])
+        loadDeck(currentDeckId)
+        console.log("deck in list of cards", deck)
+    }, [currentDeckId])
 
-    if (currentDeck.length) {
-        return (
-            <div>
-                {content}
-            </div>
-        )
-    } else {
-        return "No cards found."
+    function loadDeck(currentDeckId) {
+        setError(null)
+        const abortController = new AbortController()
+        readDeck(currentDeckId, abortController.signal).then(setDeck).catch(setError)
+        return () => abortController.abort()
     }
+    
+    return (
+        <div>
+            <p>List of cards</p>
+        </div>
+    )
 
 }

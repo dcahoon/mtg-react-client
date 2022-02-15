@@ -2,7 +2,8 @@ import { useState, useEffect } from "react"
 import SearchDisplay from "./SearchDisplay"
 import DecksDisplay from "./DecksDisplay"
 import ListOfCards from "./ListOfCards"
-const axios = require("axios")
+import { listDecks } from "./utils/api"
+import { Link } from "react-router-dom"
 
 
 export default function UserArea() {
@@ -10,8 +11,9 @@ export default function UserArea() {
     const [decks, setDecks] = useState([])
     const [currentDeckId, setCurrentDeckId] = useState("")
     const [currentDeck, setCurrentDeck] = useState("")
+    const [error, setError] = useState(null)
 
-    useEffect(() => {
+    /* useEffect(() => {
 
         async function getDecksFromApi() {
             try {
@@ -25,9 +27,17 @@ export default function UserArea() {
         }
         getDecksFromApi()
 
-    }, [])
+    }, []) */
 
     useEffect(() => {
+        setError(null)
+        const abortController = new AbortController()
+        listDecks(abortController.signal)
+            .then((decksFromApi) => setDecks(decksFromApi)).catch(setError)
+        return () => abortController.abort()
+    }, [])
+
+    /* useEffect(() => {
         async function getCardsInDeck() {
             if (currentDeckId) {
                 try {
@@ -35,7 +45,8 @@ export default function UserArea() {
                     const response = await fetch(`http://localhost:5000/decks-cards/1`)
                     const cardsInDeck = await response.json()
                     console.log("cards in deck", cardsInDeck)
-                    setCurrentDeck(cardsInDeck)
+                    setCurrentDeck(() => cardsInDeck)
+                    console.log("currentdeck in useEffect", currentDeck)
                 } catch (error) {
                     throw error
                 }
@@ -44,24 +55,34 @@ export default function UserArea() {
             }
         }
         getCardsInDeck()
-    }, [currentDeckId])
+    }, [currentDeckId]) */
+
+    const listOfDecks = decks.map((deck, index) => (
+        <Link
+            key={index}
+            to={`/users/1/${deck.deck_id}`}
+            className="btn"
+            onClick={() => setCurrentDeckId(deck.deck_id)}
+        >
+            <h4>{deck.deck_name}</h4>
+        </Link>
+    ))
 
     return (
         <div>
             <h1>User Area</h1>
             <div className="row">
                 <div className="col-3">
-                    <DecksDisplay 
+                    {listOfDecks}
+                    {/* <DecksDisplay 
                         decks={decks} 
                         setCurrentDeck={setCurrentDeck}
                         setCurrentDeckId={setCurrentDeckId} 
-                    />
+                    /> */}
                 </div>
                 <div className="col-3">
                     <ListOfCards 
-                        currentDeck={currentDeck} 
-                        setCurrentDeck={setCurrentDeck} 
-                        currentDeckId={currentDeckId} 
+                        currentDeckId={currentDeckId}
                     />
                 </div>
                 <div className="col-6">

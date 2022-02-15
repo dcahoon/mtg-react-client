@@ -22,6 +22,7 @@ export default function DecksDisplay({ decks, setCurrentDeck, setCurrentDeckId }
                 <h3 className="p-2">Decks</h3>
                 {decks.map((deck, index) => (
                     <Link 
+                        key={index}
                         to={`${url}/${deck.deck_id}`} 
                         className="deck-list-item p-2 m-0 btn btn-secondary row col-12"
                         onClick={setCurrentDeckId(deck.deck_id)}
