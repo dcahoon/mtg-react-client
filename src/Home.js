@@ -19,7 +19,7 @@ export default function Home() {
     if (currentSet === "") {
 
         return (
-           <div> 
+            <div> 
                 <p>home page content here</p>
                 <Link to="/users/1">Sign In</Link>
                 <br/><br/>
